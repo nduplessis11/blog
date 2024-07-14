@@ -1,15 +1,17 @@
-// src/app/blog/[slug]/page.tsx
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { GetStaticPaths, GetStaticProps } from 'next';
 import { Post } from '../../../types';
 
-interface PostProps {
-  post: Post;
+interface Params {
+  params: {
+    slug: string;
+  };
 }
 
-export default function PostPage({ post }: PostProps) {
+export default function PostPage({ params }: Params) {
+  const post = getPost(params.slug);
+
   return (
     <div>
       <h1>{post.title}</h1>
@@ -18,34 +20,27 @@ export default function PostPage({ post }: PostProps) {
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
+function getPost(slug: string): Post {
   const postsDirectory = path.join(process.cwd(), 'public', 'posts');
-  const filenames = fs.readdirSync(postsDirectory);
-
-  const paths = filenames.map((filename) => ({
-    params: {
-      slug: filename.replace(/\.md$/, ''),
-    },
-  }));
-
-  return {
-    paths,
-    fallback: false,
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const postsDirectory = path.join(process.cwd(), 'public', 'posts');
-  const filePath = path.join(postsDirectory, `${params?.slug}.md`);
+  const filePath = path.join(postsDirectory, `${slug}.md`);
   const fileContents = fs.readFileSync(filePath, 'utf8');
   const { data, content } = matter(fileContents);
 
   return {
-    props: {
-      post: {
-        ...data,
-        content,
-      },
-    },
+    slug,
+    title: data.title,
+    date: data.date,
+    content,
   };
-};
+}
+
+export async function generateStaticParams() {
+  const postsDirectory = path.join(process.cwd(), 'public', 'posts');
+  const filenames = fs.readdirSync(postsDirectory);
+
+  return filenames.map((filename) => ({
+    params: {
+      slug: filename.replace(/\.md$/, ''),
+    },
+  }));
+}
