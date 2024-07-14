@@ -3,7 +3,7 @@
     "api_location": "",
     "output_location": ".next",
     "routes": [],
-    "skip_app_build": false,
+    "skip_app_build": true,
     "node_version": "20.15.1"
   }
   
