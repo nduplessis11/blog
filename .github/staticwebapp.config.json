@@ -1,0 +1,9 @@
+{
+    "app_location": "/",
+    "api_location": "",
+    "output_location": ".next",
+    "routes": [],
+    "skip_app_build": false,
+    "node_version": "20.15.1"
+  }
+  
