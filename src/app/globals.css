@@ -26,6 +26,13 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+h1 {
+  font-size: 2rem;
+  margin: 2rem auto;
+  color: #ede9f3;
+  font-family: 'Poppins', sans-serif;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
